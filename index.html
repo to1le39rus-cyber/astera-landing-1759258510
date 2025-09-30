@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Электронные входные двери в Калининграде | Astera — индивидуальные решения под ключ</title>
+    <meta name="description" content="Astera: электронные входные двери под заказ в Калининграде. Индивидуальный дизайн панели и электронные замки (биометрия, коды, смартфон). Монтаж и сервис. Сроки и доставка — по расчёту.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Электронные входные двери в Калининграде | Astera">
+    <meta property="og:description" content="Astera: электронные входные двери под заказ в Калининграде. Индивидуальный дизайн панели и электронные замки (биометрия, коды, смартфон). Монтаж и сервис. Сроки и доставка — по расчёту.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://asteradoors.ru/">
+    <meta property="og:image" content="">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Электронные входные двери в Калининграде | Astera">
+    <meta name="twitter:description" content="Astera: электронные входные двери под заказ в Калининграде. Индивидуальный дизайн панели и электронные замки (биометрия, коды, смартфон). Монтаж и сервис. Сроки и доставка — по расчёту.">
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://asteradoors.ru/">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'astera-white': '#ECEFED',
+                        'astera-mist': '#D1DBDB',
+                        'astera-grey': '#8E9D9D',
+                        'astera-olive': '#888642',
+                        'astera-dark': '#41423D'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .double-border {
+            border: 2px solid var(--astera-mist);
+            border-radius: 0.5rem;
+        }
+        
+        .sticky-cta {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+        }
+        
+        @media (min-width: 768px) {
+            .sticky-cta {
+                display: none;
+            }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-placeholder {
+            aspect-ratio: 16/9;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-astera-white text-astera-dark font-sans">
+    <!-- Header -->
+    <header class="sticky top-0 bg-astera-white shadow-sm z-40">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="text-xl font-bold text-astera-dark">
+                Astera — салон электронных входных дверей
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#advantages" class="text-astera-grey hover:text-astera-dark transition-colors">Преимущества</a>
+                <a href="#video" class="text-astera-grey hover:text-astera-dark transition-colors">Видео</a>
+                <a href="#why-us" class="text-astera-grey hover:text-astera-dark transition-colors">Почему мы</a>
+                <a href="#sets" class="text-astera-grey hover:text-astera-dark transition-colors">Наборы</a>
+                <a href="#stages" class="text-astera-grey hover:text-astera-dark transition-colors">Этапы</a>
+                <a href="#reviews" class="text-astera-grey hover:text-astera-dark transition-colors">Отзывы</a>
+                <a href="#faq" class="text-astera-grey hover:text-astera-dark transition-colors">FAQ</a>
+                <a href="#contacts" class="text-astera-grey hover:text-astera-dark transition-colors">Контакты</a>
+                <button onclick="openModal()" class="bg-astera-olive text-white px-6 py-2 rounded hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-astera-olive focus:ring-offset-2">
+                    Рассчитать дверь
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 focus:outline-none focus:ring-2 focus:ring-astera-olive">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </nav>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-astera-white border-t border-astera-mist">
+            <div class="container mx-auto px-4 py-4 space-y-2">
+                <a href="#advantages" class="block py-2 text-astera-grey hover:text-astera-dark">Преимущества</a>
+                <a href="#video" class="block py-2 text-astera-grey hover:text-astera-dark">Видео</a>
+                <a href="#why-us" class="block py-2 text-astera-grey hover:text-astera-dark">Почему мы</a>
+                <a href="#sets" class="block py-2 text-astera-grey hover:text-astera-dark">Наборы</a>
+                <a href="#stages" class="block py-2 text-astera-grey hover:text-astera-dark">Этапы</a>
+                <a href="#reviews" class="block py-2 text-astera-grey hover:text-astera-dark">Отзывы</a>
+                <a href="#faq" class="block py-2 text-astera-grey hover:text-astera-dark">FAQ</a>
+                <a href="#contacts" class="block py-2 text-astera-grey hover:text-astera-dark">Контакты</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sticky Mobile CTA -->
+    <div class="sticky-cta">
+        <button onclick="openModal()" class="bg-astera-olive text-white px-6 py-3 rounded-lg shadow-lg hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-astera-olive focus:ring-offset-2">
+            Рассчитать дверь
+        </button>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="container mx-auto px-4 py-12 md:py-20">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-3xl md:text-5xl font-bold mb-6 text-astera-dark">
+                    Электронные входные двери в Калининграде — безопасность, технологии и стиль
+                </h1>
+                <p class="text-lg md:text-xl mb-6 text-astera-grey">
+                    Индивидуальные решения под ваш дом: дизайн панели + электронный замок (биометрия, коды, управление со смартфона). Производство под заказ, установка в Калининграде.
+                </p>
+                <p class="text-sm mb-8 text-astera-grey">
+                    Сроки изготовления и доставки — индивидуальные. Уточняются при расчёте.
+                </p>
+                <button onclick="openModal()" class="bg-astera-olive text-white px-8 py-4 rounded-lg text-lg hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-astera-olive focus:ring-offset-2">
+                    Получить расчёт
+                </button>
+            </div>
+        </section>
+
+        <!-- Advantages Section -->
+        <section id="advantages" class="bg-astera-mist py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-astera-white p-6 rounded-lg double-border">
+                        <div class="mb-4">
+                            <svg class="w-12 h-12 text-astera-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-3 text-astera-dark">8+ лет опыта</h3>
+                        <p class="text-astera-grey">Проектирование, подбор и сопровождение. Понимаем задачи частных домов и квартир.</p>
+                    </div>
+                    
+                    <div class="bg-astera-white p-6 rounded-lg double-border">
+                        <div class="mb-4">
+                            <svg class="w-12 h-12 text-astera-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-3 text-astera-dark">Профессиональный монтаж</h3>
+                        <p class="text-astera-grey">Сертифицированные специалисты, работа по ГОСТ и аккуратная сдача объекта. Используем профильный инструмент.</p>
+                    </div>
+                    
+                    <div class="bg-astera-white p-6 rounded-lg double-border">
+                        <div class="mb-4">
+                            <svg class="w-12 h-12 text-astera-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-3 text-astera-dark">Доставка и установка</h3>
+                        <p class="text-astera-grey">Организуем доставку и монтаж по Калининграду и области. Согласуем удобное время и состав работ.</p>
+                    </div>
+                    
+                    <div class="bg-astera-white p-6 rounded-lg double-border">
+                        <div class="mb-4">
+                            <svg class="w-12 h-12 text-astera-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-3 text-astera-dark">Гарантия и сервис</h3>
+                        <p class="text-astera-grey">Официальные комплекты, сервисное сопровождение и поддержка после установки.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Section -->
+        <section id="video" class="py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-astera-dark">Как это работает</h2>
+                    
+                    <div class="video-placeholder mb-6">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-astera-grey" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15M9 10V9a3 3 0 013-3v0a3 3 0 013 3v1M9 10v5a2 2 0 002 2h2a2 2 0 002-2v-5m-6 0h6"></path>
+                            </svg>
+                            <p class="text-astera-grey">Отпечаток, смартфон, код — выберите удобный способ доступа.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold mb-4 text-astera-dark">Коротко о главном</h3>
+                        <div class="flex flex-wrap justify-center gap-4 text-astera-grey">
+                            <span>Управление со смартфона</span>
+                            <span>·</span>
+                            <span>Биометрия и коды</span>
+                            <span>·</span>
+                            <span>Журнал событий и уведомления</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Us Section -->
+        <section id="why-us" class="bg-astera-mist py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-astera-dark">Почему это выгодно, а не «дорого»</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Инвестиция в безопасность и комфорт</h3>
+                            <p class="text-astera-grey mb-6">контроль доступа для всей семьи</p>
+                            
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Индивидуальное изготовление</h3>
+                            <p class="text-astera-grey mb-6">под ваш интерьер</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Надёжные бренды</h3>
+                            <p class="text-astera-grey mb-6">электронных замков</p>
+                            
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Монтаж и сервис</h3>
+                            <p class="text-astera-grey mb-6">локально в Калининграде</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-astera-white p-6 rounded-lg">
+                        <h3 class="text-xl font-bold mb-4 text-astera-dark">Про сроки:</h3>
+                        <p class="text-astera-grey">Мы изготавливаем решения по индивидуальному запросу. Сроки зависят от выбранного дизайна, комплектации и текущей производственной загрузки. Актуальные ориентиры подтверждаем при расчёте — честно и прозрачно.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sets Section -->
+        <section id="sets" class="py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-astera-dark">Готовые комплектации под разные задачи</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                        <div class="bg-astera-white p-6 rounded-lg border border-astera-mist">
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Comfort</h3>
+                            <p class="text-astera-grey">Электронный замок с отпечатком и кодами, управление со смартфона. Удобно для семьи.</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg border border-astera-mist">
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Status</h3>
+                            <p class="text-astera-grey">Премиальная комплектация с повышенной надёжностью и бренд-трастом.</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg border border-astera-mist">
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Prestige</h3>
+                            <p class="text-astera-grey">Push-pull/Face ID, максимально удобный доступ и эффект «вау».</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-center text-astera-grey">Точные модели, сроки и комплектацию подберём при расчёте под ваш дизайн.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stages Section -->
+        <section id="stages" class="bg-astera-mist py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-astera-dark">Как мы работаем</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-astera-white p-6 rounded-lg text-center">
+                            <div class="w-12 h-12 bg-astera-olive text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+                            <h3 class="text-lg font-bold mb-3 text-astera-dark">Замер и бриф</h3>
+                            <p class="text-astera-grey">Фиксируем размеры и пожелания к дизайну/функциям.</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg text-center">
+                            <div class="w-12 h-12 bg-astera-olive text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+                            <h3 class="text-lg font-bold mb-3 text-astera-dark">Комплектация</h3>
+                            <p class="text-astera-grey">Подбираем панель и электронный замок под сценарии доступа.</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg text-center">
+                            <div class="w-12 h-12 bg-astera-olive text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+                            <h3 class="text-lg font-bold mb-3 text-astera-dark">Изготовление</h3>
+                            <p class="text-astera-grey">Производство по вашему запросу и контроль качества.</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg text-center">
+                            <div class="w-12 h-12 bg-astera-olive text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
+                            <h3 class="text-lg font-bold mb-3 text-astera-dark">Монтаж и настройка</h3>
+                            <p class="text-astera-grey">Установка в удобный день, подключение, обучение.</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-center text-astera-grey">Сроки изготовления и доставки определяются индивидуально и зависят от дизайна и комплектации. Уточняются при расчёте.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reviews Section -->
+        <section id="reviews" class="py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-astera-dark">Отзывы клиентов</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                        <div class="bg-astera-white p-6 rounded-lg double-border">
+                            <p class="text-astera-grey mb-4">«Открываем дверь отпечатком — очень удобно. Монтаж за один день, всё объяснили.»</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg double-border">
+                            <p class="text-astera-grey mb-4">«Панель точно под интерьер, коды для гостей — супер. Работает идеально.»</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg double-border">
+                            <p class="text-astera-grey mb-4">«Профессионально, аккуратно, по делу. Рекомендуем.»</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-center text-astera-grey">Калининград и область</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="bg-astera-mist py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-astera-dark">FAQ</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-astera-white p-6 rounded-lg">
+                            <h3 class="text-lg font-bold mb-3 text-astera-dark">Сколько ждать готовую дверь?</h3>
+                            <p class="text-astera-grey">Сроки — индивидуальные. Они зависят от дизайна, комплектации и очередности. Называем ориентиры при расчёте под ваш запрос.</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg">
+                            <h3 class="text-lg font-bold mb-3 text-astera-dark">Кто выполняет монтаж?</h3>
+                            <p class="text-astera-grey">Установку выполняют наши монтажники с многолетним опытом. Работа по ГОСТ, профессиональный инструмент.</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg">
+                            <h3 class="text-lg font-bold mb-3 text-astera-dark">Есть ли доставка?</h3>
+                            <p class="text-astera-grey">Да. Доставка и монтаж по Калининграду и области с согласованием удобного времени.</p>
+                        </div>
+                        
+                        <div class="bg-astera-white p-6 rounded-lg">
+                            <h3 class="text-lg font-bold mb-3 text-astera-dark">Можно ли сделать по референсу?</h3>
+                            <p class="text-astera-grey">Да. Присылайте фото — предложим реализацию и материалы.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Form Section -->
+        <section id="contacts" class="py-12 md:py-20">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-astera-dark">Получить расчёт и сроки под ваш запрос</h2>
+                    
+                    <form id="contact-form" class="max-w-2xl mx-auto mb-12">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-astera-dark mb-2">Имя *</label>
+                                <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-astera-mist rounded-lg focus:outline-none focus:ring-2 focus:ring-astera-olive focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-astera-dark mb-2">Телефон *</label>
+                                <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 border border-astera-mist rounded-lg focus:outline-none focus:ring-2 focus:ring-astera-olive focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="comment" class="block text-sm font-medium text-astera-dark mb-2">Комментарий (пожелания к дизайну/замку)</label>
+                            <textarea id="comment" name="comment" rows="4" class="w-full px-4 py-3 border border-astera-mist rounded-lg focus:outline-none focus:ring-2 focus:ring-astera-olive focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="dimensions" class="block text-sm font-medium text-astera-dark mb-2">Опционально: размеры проёма</label>
+                            <input type="text" id="dimensions" name="dimensions" class="w-full px-4 py-3 border border-astera-mist rounded-lg focus:outline-none focus:ring-2 focus:ring-astera-olive focus:border-transparent">
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-astera-olive text-white py-4 rounded-lg text-lg font-medium hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-astera-olive focus:ring-offset-2">
+                            Рассчитать дверь
+                        </button>
+                    </form>
+                    
+                    <p class="text-center text-astera-grey mb-12">Перезвоним, уточним детали, подберём комплектацию и подтвердим сроки изготовления и доставки.</p>
+                    
+                    <!-- Contact Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Контакты</h3>
+                            <div class="space-y-3 text-astera-grey">
+                                <p>г.Калининград, ул.Горького 98 (2этаж)</p>
+                                <p><a href="tel:+79637386555" class="hover:text-astera-dark">+7 (963) 738-65-55</a></p>
+                                <p><a href="tel:+74012336555" class="hover:text-astera-dark">+7 (4012) 33-65-55</a></p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 text-astera-dark">Социальные сети</h3>
+                            <div class="space-y-3">
+                                <p><a href="https://vk.com/asteradoors" target="_blank" rel="noopener" class="text-astera-grey hover:text-astera-dark">VK: vk.com/asteradoors</a></p>
+                                <p><a href="https://t.me/asteradoors" target="_blank" rel="noopener" class="text-astera-grey hover:text-astera-dark">Telegram: t.me/asteradoors</a></p>
+                                <p><a href="https://www.youtube.com/@asteradoors" target="_blank" rel="noopener" class="text-astera-grey hover:text-astera-dark">YouTube: youtube.com/@asteradoors</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-astera-dark text-astera-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 Astera — салон электронных входных дверей. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="bg-astera-white p-8 rounded-lg max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-astera-dark">Получить расчёт</h3>
+                <button onclick="closeModal()" class="text-astera-grey hover:text-astera-dark focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="modal-form">
+                <div class="mb-4">
+                    <label for="modal-name" class="block text-sm font-medium text-astera-dark mb-2">Имя *</label>
+                    <input type="text" id="modal-name" name="name" required class="w-full px-4 py-3 border border-astera-mist rounded-lg focus:outline-none focus:ring-2 focus:ring-astera-olive focus:border-transparent">
+                </div>
+                
+                <div class="mb-6">
+                    <label for="modal-phone" class="block text-sm font-medium text-astera-dark mb-2">Телефон *</label>
+                    <input type="tel" id="modal-phone" name="phone" required class="w-full px-4 py-3 border border-astera-mist rounded-lg focus:outline-none focus:ring-2 focus:ring-astera-olive focus:border-transparent">
+                </div>
+                
+                <button type="submit" class="w-full bg-astera-olive text-white py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-astera-olive focus:ring-offset-2">
+                    Рассчитать дверь
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Form validation
+        function validatePhone(phone) {
+            const digits = phone.replace(/\D/g, '');
+            return digits.length >= 10;
+        }
+
+        function validateForm(form) {
+            const name = form.querySelector('input[name="name"]').value.trim();
+            const phone = form.querySelector('input[name="phone"]').value.trim();
+            
+            if (!name) {
+                alert('Пожалуйста, введите ваше имя');
+                return false;
+            }
+            
+            if (!validatePhone(phone)) {
+                alert('Пожалуйста, введите корректный номер телефона (минимум 10 цифр)');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Handle form submissions
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (validateForm(this)) {
+                alert('Спасибо! Мы свяжемся с вами в ближайшее время.');
+                this.reset();
+            }
+        });
+
+        document.getElementById('modal-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (validateForm(this)) {
+                alert('Спасибо! Мы свяжемся с вами в ближайшее время.');
+                this.reset();
+                closeModal();
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        // Lazy loading for images (placeholder for future implementation)
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+    </script>
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Astera — салон электронных входных дверей",
+        "image": "",
+        "url": "https://asteradoors.ru/",
+        "telephone": ["+79637386555", "+74012336555"],
+        "email": "asteradoors@yandex.ru",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Калининград",
+            "streetAddress": "ул.Горького 98 (2этаж)",
+            "addressCountry": "RU"
+        },
+        "areaServed": ["Калининград", "Калининградская область"],
+        "sameAs": [
+            "https://vk.com/asteradoors",
+            "https://t.me/asteradoors",
+            "https://www.youtube.com/@asteradoors"
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Сколько ждать готовую дверь?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Сроки — индивидуальные. Они зависят от дизайна, комплектации и очередности. Называем ориентиры при расчёте под ваш запрос."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Кто выполняет монтаж?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Установку выполняют наши монтажники с многолетним опытом. Работа по ГОСТ, профессиональный инструмент."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Есть ли доставка?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Да. Доставка и монтаж по Калининграду и области с согласованием удобного времени."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Можно ли сделать по референсу?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Да. Присылайте фото — предложим реализацию и материалы."
+                }
+            }
+        ]
+    }
+    </script>
+</body>
+</html>
