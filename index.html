@@ -268,11 +268,11 @@
             <!-- Desktop Navigation -->
             <div class="hidden lg:flex items-center space-x-8">
                 <a href="#advantages" class="nav-link text-astera-light-grey hover:text-astera-gold">Преимущества</a>
-                <a href="#video" class="nav-link text-astera-light-grey hover:text-astera-gold">Видео</a>
                 <a href="#why-us" class="nav-link text-astera-light-grey hover:text-astera-gold">Почему мы</a>
-                <a href="#sets" class="nav-link text-astera-light-grey hover:text-astera-gold">Наборы</a>
+                <a href="#works" class="nav-link text-astera-light-grey hover:text-astera-gold">Наши работы</a>
                 <a href="#stages" class="nav-link text-astera-light-grey hover:text-astera-gold">Этапы</a>
                 <a href="#reviews" class="nav-link text-astera-light-grey hover:text-astera-gold">Отзывы</a>
+                <a href="#partnership" class="nav-link text-astera-light-grey hover:text-astera-gold">Сотрудничество</a>
                 <a href="#faq" class="nav-link text-astera-light-grey hover:text-astera-gold">FAQ</a>
                 <a href="#contacts" class="nav-link text-astera-light-grey hover:text-astera-gold">Контакты</a>
                 <button onclick="openModal()" class="btn-primary text-astera-dark-charcoal px-8 py-3 rounded-full font-medium">
@@ -292,11 +292,11 @@
         <div id="mobile-menu" class="hidden lg:hidden glass-effect border-t border-astera-border">
             <div class="container mx-auto px-6 py-6 space-y-4">
                 <a href="#advantages" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Преимущества</a>
-                <a href="#video" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Видео</a>
                 <a href="#why-us" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Почему мы</a>
-                <a href="#sets" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Наборы</a>
+                <a href="#works" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Наши работы</a>
                 <a href="#stages" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Этапы</a>
                 <a href="#reviews" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Отзывы</a>
+                <a href="#partnership" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Сотрудничество</a>
                 <a href="#faq" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">FAQ</a>
                 <a href="#contacts" class="block py-2 text-astera-light-grey hover:text-astera-gold transition-colors">Контакты</a>
             </div>
@@ -391,7 +391,7 @@
             </div>
         </section>
 
-        <!-- Video Section -->
+        <!-- Video Section (kept for mobile menu, but removed from desktop nav) -->
         <section id="video" class="py-20 bg-astera-dark-charcoal">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
@@ -451,55 +451,30 @@
             </div>
         </section>
 
-        <!-- Sets Section -->
-        <section id="sets" class="py-20 bg-astera-dark-charcoal">
+        <!-- New Works Section -->
+        <section id="works" class="py-20 bg-astera-dark-charcoal">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-5xl font-bold playfair text-astera-white mb-6">Наборы решений</h2>
+                    <h2 class="text-4xl md:text-5xl font-bold playfair text-astera-white mb-6">Наши работы</h2>
                     <div class="w-24 h-1 bg-astera-gold mx-auto"></div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="glass-effect p-8 rounded-2xl hover-lift text-center">
-                        <div class="text-3xl font-bold playfair text-astera-gold mb-4">Базовый</div>
-                        <ul class="text-astera-light-grey space-y-3 mb-8">
-                            <li>• Электронный замок с кодом</li>
-                            <li>• Стандартная панель</li>
-                            <li>• Установка и настройка</li>
-                            <li>• Гарантия 1 год</li>
-                        </ul>
-                        <button onclick="openModal()" class="btn-primary text-astera-dark-charcoal px-8 py-3 rounded-full font-medium w-full">
-                            Узнать цену
-                        </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Placeholder for work items -->
+                    <div class="glass-effect p-6 rounded-2xl hover-lift">
+                        <img src="https://via.placeholder.com/400x300/2C3E50/D4AF37?text=Работа+1" alt="Пример работы 1" class="rounded-lg mb-4 w-full h-auto">
+                        <h3 class="text-xl font-bold playfair mb-2 text-astera-white">Проект "Элитный коттедж"</h3>
+                        <p class="text-astera-light-grey">Установка мультибиометрической системы доступа и дизайнерской панели.</p>
                     </div>
-                    
-                    <div class="glass-effect p-8 rounded-2xl hover-lift text-center border-2 border-astera-gold">
-                        <div class="text-sm text-astera-gold mb-2">ПОПУЛЯРНЫЙ</div>
-                        <div class="text-3xl font-bold playfair text-astera-gold mb-4">Премиум</div>
-                        <ul class="text-astera-light-grey space-y-3 mb-8">
-                            <li>• Биометрический замок</li>
-                            <li>• Дизайнерская панель</li>
-                            <li>• Мобильное приложение</li>
-                            <li>• Видеодомофон</li>
-                            <li>• Гарантия 2 года</li>
-                        </ul>
-                        <button onclick="openModal()" class="btn-primary text-astera-dark-charcoal px-8 py-3 rounded-full font-medium w-full">
-                            Узнать цену
-                        </button>
+                    <div class="glass-effect p-6 rounded-2xl hover-lift">
+                        <img src="https://via.placeholder.com/400x300/2C3E50/D4AF37?text=Работа+2" alt="Пример работы 2" class="rounded-lg mb-4 w-full h-auto">
+                        <h3 class="text-xl font-bold playfair mb-2 text-astera-white">Проект "Умная квартира"</h3>
+                        <p class="text-astera-light-grey">Интеграция электронного замка с системой умного дома и мобильным управлением.</p>
                     </div>
-                    
-                    <div class="glass-effect p-8 rounded-2xl hover-lift text-center">
-                        <div class="text-3xl font-bold playfair text-astera-gold mb-4">Люкс</div>
-                        <ul class="text-astera-light-grey space-y-3 mb-8">
-                            <li>• Мультибиометрия</li>
-                            <li>• Эксклюзивный дизайн</li>
-                            <li>• Умный дом интеграция</li>
-                            <li>• Система безопасности</li>
-                            <li>• Гарантия 3 года</li>
-                        </ul>
-                        <button onclick="openModal()" class="btn-primary text-astera-dark-charcoal px-8 py-3 rounded-full font-medium w-full">
-                            Узнать цену
-                        </button>
+                    <div class="glass-effect p-6 rounded-2xl hover-lift">
+                        <img src="https://via.placeholder.com/400x300/2C3E50/D4AF37?text=Работа+3" alt="Пример работы 3" class="rounded-lg mb-4 w-full h-auto">
+                        <h3 class="text-xl font-bold playfair mb-2 text-astera-white">Проект "Офисный центр"</h3>
+                        <p class="text-astera-light-grey">Установка RFID-системы доступа для сотрудников и посетителей.</p>
                     </div>
                 </div>
             </div>
@@ -582,7 +557,7 @@
                         <p class="text-astera-light-grey">"Очень довольна результатом. Дверь выглядит стильно, а управление через смартфон очень удобно. Спасибо команде Astera!"</p>
                     </div>
                     
-                    <div class="glass-effect p-6 rounded-xl hover-lift">
+                    <div class="glass-effect p-6 rounded-2xl hover-lift">
                         <div class="flex items-center mb-4">
                             <div class="w-12 h-12 bg-astera-gold rounded-full flex items-center justify-center text-astera-dark-charcoal font-bold mr-4">Д</div>
                             <div>
@@ -596,8 +571,35 @@
             </div>
         </section>
 
+        <!-- Partnership Section -->
+        <section id="partnership" class="py-20 bg-astera-night-blue">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold playfair text-astera-white mb-6">Сотрудничество</h2>
+                    <div class="w-24 h-1 bg-astera-gold mx-auto"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-effect p-8 rounded-2xl hover-lift text-center">
+                        <h3 class="text-xl font-bold playfair mb-4 text-astera-white">Для застройщиков</h3>
+                        <p class="text-astera-light-grey leading-relaxed">Предлагаем комплексные решения по оснащению жилых комплексов и коммерческих объектов электронными входными дверями.</p>
+                    </div>
+                    
+                    <div class="glass-effect p-8 rounded-2xl hover-lift text-center">
+                        <h3 class="text-xl font-bold playfair mb-4 text-astera-white">Для дизайнеров</h3>
+                        <p class="text-astera-light-grey leading-relaxed">Поможем воплотить самые смелые идеи в дизайне входных групп, предложим эксклюзивные панели и фурнитуру.</p>
+                    </div>
+                    
+                    <div class="glass-effect p-8 rounded-2xl hover-lift text-center">
+                        <h3 class="text-xl font-bold playfair mb-4 text-astera-white">Для строителей</h3>
+                        <p class="text-astera-light-grey leading-relaxed">Надежный партнер для реализации проектов любой сложности. Гарантируем качество и соблюдение сроков.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- FAQ Section -->
-        <section id="faq" class="py-20 bg-astera-night-blue">
+        <section id="faq" class="py-20 bg-astera-dark-charcoal">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
                     <h2 class="text-4xl md:text-5xl font-bold playfair text-astera-white mb-6">Частые вопросы</h2>
@@ -613,7 +615,7 @@
                             </svg>
                         </button>
                         <div class="hidden p-6 pt-0 text-astera-light-grey" id="faq-content-1">
-                            Мы устанавливаем различные типы электронных замков: кодовые, биометрические (отпечаток пальца), RFID-карты, управление через мобильное приложение. Также возможна комбинация нескольких способов доступа.
+                            Мы устанавливаем различные типы электронных замков: кодовые, биометрические (отпечаток пальца), RFID-карты, мобильные приложения и традиционные коды. Также возможна комбинация нескольких способов доступа.
                         </div>
                     </div>
                     
