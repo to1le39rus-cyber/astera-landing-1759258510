@@ -98,6 +98,7 @@
         
         html {
             scroll-behavior: smooth;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         
         body {
@@ -109,6 +110,9 @@
             background-color: var(--bg);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            width: 100%;
+            max-width: 100vw;
         }
         
         /* Typography */
@@ -116,18 +120,34 @@
             margin: 0 0 var(--space-4) 0;
             font-weight: 600;
             line-height: 1.2;
+            word-wrap: break-word;
+            hyphens: auto;
         }
         
-        h1 { font-size: var(--text-5xl); }
-        h2 { font-size: var(--text-4xl); }
-        h3 { font-size: var(--text-3xl); }
-        h4 { font-size: var(--text-2xl); }
-        h5 { font-size: var(--text-xl); }
-        h6 { font-size: var(--text-lg); }
+        h1 { 
+            font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+        }
+        h2 { 
+            font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+        }
+        h3 { 
+            font-size: clamp(var(--text-xl), 3vw, var(--text-3xl));
+        }
+        h4 { 
+            font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl));
+        }
+        h5 { 
+            font-size: clamp(var(--text-base), 2vw, var(--text-xl));
+        }
+        h6 { 
+            font-size: clamp(var(--text-sm), 1.5vw, var(--text-lg));
+        }
         
         p {
             margin: 0 0 var(--space-4) 0;
             color: var(--muted);
+            word-wrap: break-word;
+            hyphens: auto;
         }
         
         /* Layout */
@@ -135,6 +155,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 var(--space-4);
+            width: 100%;
         }
         
         @media (min-width: 768px) {
@@ -147,6 +168,7 @@
         .grid {
             display: grid;
             gap: var(--space-6);
+            width: 100%;
         }
         
         .grid-cols-1 { grid-template-columns: 1fr; }
@@ -184,6 +206,7 @@
             transition: all 0.2s ease;
             min-height: 44px;
             min-width: 44px;
+            white-space: nowrap;
         }
         
         .btn:focus-visible {
@@ -218,6 +241,7 @@
             border-radius: var(--radius-xl);
             padding: var(--space-6);
             transition: all 0.3s ease;
+            width: 100%;
         }
         
         .card:hover {
@@ -234,6 +258,7 @@
             background: rgba(26, 26, 26, 0.9);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
+            width: 100%;
         }
         
         .nav {
@@ -241,6 +266,7 @@
             align-items: center;
             justify-content: space-between;
             padding: var(--space-4) 0;
+            width: 100%;
         }
         
         .nav-brand {
@@ -270,6 +296,7 @@
             font-weight: 500;
             transition: color 0.2s ease;
             position: relative;
+            white-space: nowrap;
         }
         
         .nav-link:hover,
@@ -333,6 +360,7 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
+            width: 100%;
         }
         
         .hero-content {
@@ -340,6 +368,7 @@
             grid-template-columns: 1fr;
             gap: var(--space-8);
             align-items: center;
+            width: 100%;
         }
         
         @media (min-width: 1024px) {
@@ -370,6 +399,7 @@
         /* Section */
         .section {
             padding: var(--space-16) 0;
+            width: 100%;
         }
         
         .section-header {
@@ -386,6 +416,89 @@
             color: var(--muted);
             max-width: 600px;
             margin: 0 auto;
+        }
+        
+        /* Slider Styles */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            width: 100%;
+        }
+        
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+            width: 100%;
+        }
+        
+        .slider-slide {
+            min-width: 100%;
+            flex-shrink: 0;
+        }
+        
+        @media (min-width: 768px) {
+            .slider-slide {
+                min-width: 50%;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .slider-slide {
+                min-width: 33.333%;
+            }
+        }
+        
+        .slider-nav {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+        
+        .slider-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .slider-btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+        
+        .slider-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-2);
+            margin-top: var(--space-4);
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .slider-dot.active {
+            background: var(--accent);
         }
         
         /* Forms */
@@ -625,11 +738,26 @@
             border-top: 1px solid var(--border);
             padding: var(--space-8) 0;
             text-align: center;
+            width: 100%;
         }
         
         .footer p {
             color: var(--muted);
             font-size: var(--text-sm);
+        }
+        
+        /* Icon only styles */
+        .icon-only {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .icon-only img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -724,25 +852,33 @@
                 
                 <div class="grid grid-cols-4">
                     <div class="card">
-                        <img src="icon_experience.png" alt="" width="64" height="64" loading="lazy" style="margin-bottom: var(--space-4);" aria-hidden="true">
+                        <div class="icon-only">
+                            <img src="icon_experience.png" alt="Иконка опыта" loading="lazy" aria-hidden="true">
+                        </div>
                         <h3>8+ лет опыта</h3>
                         <p>Проектирование, подбор и сопровождение. Понимаем задачи частных домов и квартир.</p>
                     </div>
                     
                     <div class="card">
-                        <img src="icon_installation.png" alt="" width="64" height="64" loading="lazy" style="margin-bottom: var(--space-4);" aria-hidden="true">
+                        <div class="icon-only">
+                            <img src="icon_installation.png" alt="Иконка монтажа" loading="lazy" aria-hidden="true">
+                        </div>
                         <h3>Профессиональный монтаж</h3>
                         <p>Сертифицированные специалисты, работа по ГОСТ и аккуратная сдача объекта. Используем профильный инструмент.</p>
                     </div>
                     
                     <div class="card">
-                        <img src="icon_delivery.png" alt="" width="64" height="64" loading="lazy" style="margin-bottom: var(--space-4);" aria-hidden="true">
+                        <div class="icon-only">
+                            <img src="icon_delivery.png" alt="Иконка доставки" loading="lazy" aria-hidden="true">
+                        </div>
                         <h3>Доставка и установка</h3>
                         <p>Организуем доставку и монтаж по Калининграду и области. Согласуем удобное время и состав работ.</p>
                     </div>
                     
                     <div class="card">
-                        <img src="icon_warranty.png" alt="" width="64" height="64" loading="lazy" style="margin-bottom: var(--space-4);" aria-hidden="true">
+                        <div class="icon-only">
+                            <img src="icon_warranty.png" alt="Иконка гарантии" loading="lazy" aria-hidden="true">
+                        </div>
                         <h3>Гарантия и сервис</h3>
                         <p>Официальные комплекты, сервисное сопровождение и поддержка после установки.</p>
                     </div>
@@ -778,7 +914,7 @@
                     
                     <div class="text-center">
                         <div class="card">
-                            <div style="font-size: var(--text-6xl); font-weight: 700; color: var(--accent); margin-bottom: var(--space-4);">100+</div>
+                            <div style="font-size: var(--text-6xl); font-weight: 700; color: var(--accent); margin-bottom: var(--space-4);">1000+</div>
                             <h3>Установленных дверей</h3>
                             <p>За последние 3 года в Калининграде и области</p>
                         </div>
@@ -787,7 +923,7 @@
             </div>
         </section>
 
-        <!-- Works Section -->
+        <!-- Works Section with Slider -->
         <section id="works" class="section bg-surface">
             <div class="container">
                 <div class="section-header">
@@ -795,24 +931,55 @@
                     <p class="section-subtitle">Примеры реализованных проектов</p>
                 </div>
                 
-                <div class="grid grid-cols-3">
-                    <article class="card">
-                        <img src="https://via.placeholder.com/400x250/2C3E50/D4AF37?text=Элитный+коттедж" alt="Проект установки электронной двери в элитном коттедже" width="400" height="250" loading="lazy" style="border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
-                        <h3>Проект "Элитный коттедж"</h3>
-                        <p>Установка мультибиометрической системы доступа и дизайнерской панели для частного дома премиум-класса.</p>
-                    </article>
+                <div class="slider-container">
+                    <div class="slider-wrapper" id="works-slider">
+                        <div class="slider-slide">
+                            <article class="card" style="margin: 0 var(--space-3);">
+                                <img src="https://via.placeholder.com/400x250/2C3E50/D4AF37?text=Элитный+коттедж" alt="Проект установки электронной двери в элитном коттедже" width="400" height="250" loading="lazy" style="border-radius: var(--radius-lg); margin-bottom: var(--space-4); width: 100%;">
+                                <h3>Проект "Элитный коттедж"</h3>
+                                <p>Установка мультибиометрической системы доступа и дизайнерской панели для частного дома премиум-класса.</p>
+                            </article>
+                        </div>
+                        
+                        <div class="slider-slide">
+                            <article class="card" style="margin: 0 var(--space-3);">
+                                <img src="https://via.placeholder.com/400x250/2C3E50/D4AF37?text=Умная+квартира" alt="Проект интеграции электронного замка с системой умного дома" width="400" height="250" loading="lazy" style="border-radius: var(--radius-lg); margin-bottom: var(--space-4); width: 100%;">
+                                <h3>Проект "Умная квартира"</h3>
+                                <p>Интеграция электронного замка с системой умного дома и мобильным управлением через приложение.</p>
+                            </article>
+                        </div>
+                        
+                        <div class="slider-slide">
+                            <article class="card" style="margin: 0 var(--space-3);">
+                                <img src="https://via.placeholder.com/400x250/2C3E50/D4AF37?text=Офисный+центр" alt="Проект установки RFID-системы доступа в офисном центре" width="400" height="250" loading="lazy" style="border-radius: var(--radius-lg); margin-bottom: var(--space-4); width: 100%;">
+                                <h3>Проект "Офисный центр"</h3>
+                                <p>Установка RFID-системы доступа для сотрудников и посетителей с возможностью гибкого управления правами.</p>
+                            </article>
+                        </div>
+                        
+                        <div class="slider-slide">
+                            <article class="card" style="margin: 0 var(--space-3);">
+                                <img src="https://via.placeholder.com/400x250/2C3E50/D4AF37?text=Загородный+дом" alt="Проект установки системы доступа в загородном доме" width="400" height="250" loading="lazy" style="border-radius: var(--radius-lg); margin-bottom: var(--space-4); width: 100%;">
+                                <h3>Проект "Загородный дом"</h3>
+                                <p>Комплексная система безопасности с интеграцией видеонаблюдения и контроля доступа.</p>
+                            </article>
+                        </div>
+                        
+                        <div class="slider-slide">
+                            <article class="card" style="margin: 0 var(--space-3);">
+                                <img src="https://via.placeholder.com/400x250/2C3E50/D4AF37?text=Бизнес+центр" alt="Проект установки многоуровневой системы доступа в бизнес-центре" width="400" height="250" loading="lazy" style="border-radius: var(--radius-lg); margin-bottom: var(--space-4); width: 100%;">
+                                <h3>Проект "Бизнес-центр"</h3>
+                                <p>Многоуровневая система контроля доступа с временными ограничениями и аудитом входов.</p>
+                            </article>
+                        </div>
+                    </div>
                     
-                    <article class="card">
-                        <img src="https://via.placeholder.com/400x250/2C3E50/D4AF37?text=Умная+квартира" alt="Проект интеграции электронного замка с системой умного дома" width="400" height="250" loading="lazy" style="border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
-                        <h3>Проект "Умная квартира"</h3>
-                        <p>Интеграция электронного замка с системой умного дома и мобильным управлением через приложение.</p>
-                    </article>
+                    <div class="slider-nav">
+                        <button class="slider-btn" id="works-prev" aria-label="Предыдущий слайд">‹</button>
+                        <button class="slider-btn" id="works-next" aria-label="Следующий слайд">›</button>
+                    </div>
                     
-                    <article class="card">
-                        <img src="https://via.placeholder.com/400x250/2C3E50/D4AF37?text=Офисный+центр" alt="Проект установки RFID-системы доступа в офисном центре" width="400" height="250" loading="lazy" style="border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
-                        <h3>Проект "Офисный центр"</h3>
-                        <p>Установка RFID-системы доступа для сотрудников и посетителей с возможностью гибкого управления правами.</p>
-                    </article>
+                    <div class="slider-dots" id="works-dots"></div>
                 </div>
             </div>
         </section>
@@ -872,38 +1039,38 @@
                 </div>
                 
                 <div class="grid grid-cols-3">
-                    <article class="card">
-                        <div style="display: flex; align-items: center; margin-bottom: var(--space-4);">
-                            <div style="width: 48px; height: 48px; background: var(--accent); color: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: var(--space-3);">А</div>
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+                            <div style="width: 48px; height: 48px; background: var(--accent); color: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">А</div>
                             <div>
-                                <div style="font-weight: 600; color: var(--text);">Александр К.</div>
-                                <div style="font-size: var(--text-sm); color: var(--muted);">Частный дом</div>
+                                <h4 style="margin: 0;">Александр К.</h4>
+                                <p style="margin: 0; font-size: var(--text-sm); color: var(--muted);">Частный дом</p>
                             </div>
                         </div>
                         <p>"Отличная работа! Дверь установили быстро и качественно. Биометрический замок работает безупречно. Рекомендую!"</p>
-                    </article>
+                    </div>
                     
-                    <article class="card">
-                        <div style="display: flex; align-items: center; margin-bottom: var(--space-4);">
-                            <div style="width: 48px; height: 48px; background: var(--accent); color: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: var(--space-3);">М</div>
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+                            <div style="width: 48px; height: 48px; background: var(--accent); color: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">М</div>
                             <div>
-                                <div style="font-weight: 600; color: var(--text);">Мария С.</div>
-                                <div style="font-size: var(--text-sm); color: var(--muted);">Квартира</div>
+                                <h4 style="margin: 0;">Мария С.</h4>
+                                <p style="margin: 0; font-size: var(--text-sm); color: var(--muted);">Квартира</p>
                             </div>
                         </div>
                         <p>"Очень довольна результатом. Дверь выглядит стильно, а управление через смартфон очень удобно. Спасибо команде Astera!"</p>
-                    </article>
+                    </div>
                     
-                    <article class="card">
-                        <div style="display: flex; align-items: center; margin-bottom: var(--space-4);">
-                            <div style="width: 48px; height: 48px; background: var(--accent); color: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: var(--space-3);">Д</div>
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
+                            <div style="width: 48px; height: 48px; background: var(--accent); color: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">Д</div>
                             <div>
-                                <div style="font-weight: 600; color: var(--text);">Дмитрий В.</div>
-                                <div style="font-size: var(--text-sm); color: var(--muted);">Офис</div>
+                                <h4 style="margin: 0;">Дмитрий В.</h4>
+                                <p style="margin: 0; font-size: var(--text-sm); color: var(--muted);">Офис</p>
                             </div>
                         </div>
                         <p>"Профессиональный подход на всех этапах. Система контроля доступа работает стабильно уже полгода. Очень надежно!"</p>
-                    </article>
+                    </div>
                 </div>
             </div>
         </section>
@@ -917,17 +1084,17 @@
                 </div>
                 
                 <div class="grid grid-cols-3">
-                    <div class="card text-center">
+                    <div class="card">
                         <h3>Для застройщиков</h3>
                         <p>Предлагаем комплексные решения по оснащению жилых комплексов и коммерческих объектов электронными входными дверями.</p>
                     </div>
                     
-                    <div class="card text-center">
+                    <div class="card">
                         <h3>Для дизайнеров</h3>
                         <p>Поможем воплотить самые смелые идеи в дизайне входных групп, предложим эксклюзивные панели и фурнитуру.</p>
                     </div>
                     
-                    <div class="card text-center">
+                    <div class="card">
                         <h3>Для строителей</h3>
                         <p>Надежный партнер для реализации проектов любой сложности. Гарантируем качество и соблюдение сроков.</p>
                     </div>
@@ -945,42 +1112,42 @@
                 
                 <div style="max-width: 800px; margin: 0 auto;">
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(1)" aria-expanded="false" aria-controls="faq-answer-1">
-                            <span>Какие типы замков вы устанавливаете?</span>
-                            <span class="faq-icon" aria-hidden="true">▼</span>
+                        <button class="faq-question" onclick="toggleFaq(1)" aria-expanded="false">
+                            Какие типы замков вы устанавливаете?
+                            <span class="faq-icon">▼</span>
                         </button>
-                        <div class="faq-answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1">
-                            <p>Мы устанавливаем различные типы электронных замков: кодовые, биометрические (отпечаток пальца), RFID-карты, мобильные приложения и традиционные коды. Также возможна комбинация нескольких способов доступа.</p>
+                        <div id="faq-answer-1" class="faq-answer">
+                            Мы устанавливаем биометрические замки (отпечаток пальца, сканер лица), RFID-карты, кодовые замки, замки с управлением через мобильное приложение и комбинированные системы.
                         </div>
                     </div>
                     
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(2)" aria-expanded="false" aria-controls="faq-answer-2">
-                            <span>Сколько времени занимает установка?</span>
-                            <span class="faq-icon" aria-hidden="true">▼</span>
+                        <button class="faq-question" onclick="toggleFaq(2)" aria-expanded="false">
+                            Сколько времени занимает установка?
+                            <span class="faq-icon">▼</span>
                         </button>
-                        <div class="faq-answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2">
-                            <p>Стандартная установка занимает 4-6 часов. Время может увеличиться в зависимости от сложности проема и дополнительных работ по подготовке места установки.</p>
+                        <div id="faq-answer-2" class="faq-answer">
+                            Установка стандартной двери занимает 4-6 часов. Сложные проекты с дополнительными системами могут потребовать 1-2 дня работы.
                         </div>
                     </div>
                     
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(3)" aria-expanded="false" aria-controls="faq-answer-3">
-                            <span>Какая гарантия на оборудование?</span>
-                            <span class="faq-icon" aria-hidden="true">▼</span>
+                        <button class="faq-question" onclick="toggleFaq(3)" aria-expanded="false">
+                            Какая гарантия на оборудование?
+                            <span class="faq-icon">▼</span>
                         </button>
-                        <div class="faq-answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3">
-                            <p>Гарантия на электронные замки составляет от 1 до 3 лет в зависимости от модели. На работы по установке даем гарантию 1 год. Также предоставляем сервисное обслуживание.</p>
+                        <div id="faq-answer-3" class="faq-answer">
+                            Предоставляем гарантию 2 года на электронные компоненты и 5 лет на механические части. Также доступно расширенное сервисное обслуживание.
                         </div>
                     </div>
                     
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(4)" aria-expanded="false" aria-controls="faq-answer-4">
-                            <span>Можно ли интегрировать с системой умного дома?</span>
-                            <span class="faq-icon" aria-hidden="true">▼</span>
+                        <button class="faq-question" onclick="toggleFaq(4)" aria-expanded="false">
+                            Можно ли интегрировать с системой умного дома?
+                            <span class="faq-icon">▼</span>
                         </button>
-                        <div class="faq-answer" id="faq-answer-4" role="region" aria-labelledby="faq-question-4">
-                            <p>Да, большинство наших замков поддерживают интеграцию с популярными системами умного дома через Wi-Fi, Bluetooth или специальные протоколы связи.</p>
+                        <div id="faq-answer-4" class="faq-answer">
+                            Да, наши замки совместимы с популярными системами умного дома: Apple HomeKit, Google Home, Amazon Alexa, а также с российскими решениями.
                         </div>
                     </div>
                 </div>
@@ -995,59 +1162,57 @@
                     <p class="section-subtitle">Свяжитесь с нами удобным способом</p>
                 </div>
                 
-                <div class="grid grid-cols-2">
-                    <div style="display: grid; gap: var(--space-6);">
-                        <div class="card">
-                            <h3>Адрес салона</h3>
-                            <p>г.Калининград, ул.Горького 98 (2этаж)</p>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>Телефоны</h3>
-                            <div style="display: grid; gap: var(--space-2);">
-                                <a href="tel:+79637386555" class="contact-link">+7 (963) 738-65-55</a>
-                                <a href="tel:+74012336555" class="contact-link">+7 (4012) 33-65-55</a>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>Мессенджеры</h3>
-                            <div style="display: grid; gap: var(--space-2);">
-                                <a href="https://wa.me/79637386555" class="contact-link" target="_blank" rel="noopener">WhatsApp</a>
-                                <a href="https://t.me/asteradoors" class="contact-link" target="_blank" rel="noopener">Telegram</a>
-                            </div>
+                <div class="grid grid-cols-3" style="margin-bottom: var(--space-12);">
+                    <div class="card">
+                        <h3>Адрес салона</h3>
+                        <p>г.Калининград, ул.Горького 98 (2этаж)</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Телефоны</h3>
+                        <div style="display: grid; gap: var(--space-2);">
+                            <a href="tel:+79637386555" class="contact-link">+7 (963) 738-65-55</a>
+                            <a href="tel:+74012336555" class="contact-link">+7 (4012) 33-65-55</a>
                         </div>
                     </div>
                     
                     <div class="card">
-                        <h3 style="text-align: center; margin-bottom: var(--space-6);">Получить консультацию</h3>
-                        <form id="contact-form" novalidate>
-                            <div class="form-group">
-                                <label for="contact-name" class="form-label">Имя *</label>
-                                <input type="text" id="contact-name" name="name" class="form-input" required aria-describedby="contact-name-error">
-                                <div id="contact-name-error" class="form-error" role="alert"></div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="contact-phone" class="form-label">Телефон *</label>
-                                <input type="tel" id="contact-phone" name="phone" class="form-input" required aria-describedby="contact-phone-error">
-                                <div id="contact-phone-error" class="form-error" role="alert"></div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="contact-message" class="form-label">Сообщение</label>
-                                <textarea id="contact-message" name="message" class="form-input" rows="4" style="resize: vertical;"></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">
-                                Отправить заявку
-                            </button>
-                            
-                            <div id="contact-form-success" class="form-success" style="display: none; text-align: center; margin-top: var(--space-4);" role="alert">
-                                Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.
-                            </div>
-                        </form>
+                        <h3>Мессенджеры</h3>
+                        <div style="display: grid; gap: var(--space-2);">
+                            <a href="https://wa.me/79637386555" class="contact-link" target="_blank" rel="noopener">WhatsApp</a>
+                            <a href="https://t.me/asteradoors" class="contact-link" target="_blank" rel="noopener">Telegram</a>
+                        </div>
                     </div>
+                </div>
+                
+                <div class="card">
+                    <h3 style="text-align: center; margin-bottom: var(--space-6);">Получить консультацию</h3>
+                    <form id="contact-form" novalidate>
+                        <div class="form-group">
+                            <label for="contact-name" class="form-label">Имя *</label>
+                            <input type="text" id="contact-name" name="name" class="form-input" required aria-describedby="contact-name-error">
+                            <div id="contact-name-error" class="form-error" role="alert"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact-phone" class="form-label">Телефон *</label>
+                            <input type="tel" id="contact-phone" name="phone" class="form-input" required aria-describedby="contact-phone-error">
+                            <div id="contact-phone-error" class="form-error" role="alert"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact-message" class="form-label">Сообщение</label>
+                            <textarea id="contact-message" name="message" class="form-input" rows="4" style="resize: vertical;"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Отправить заявку
+                        </button>
+                        
+                        <div id="contact-form-success" class="form-success" style="display: none; text-align: center; margin-top: var(--space-4);" role="alert">
+                            Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>
@@ -1130,6 +1295,128 @@
     </script>
 
     <script>
+        // Slider functionality
+        class Slider {
+            constructor(containerId, options = {}) {
+                this.container = document.getElementById(containerId);
+                this.wrapper = this.container.querySelector('.slider-wrapper');
+                this.slides = this.wrapper.querySelectorAll('.slider-slide');
+                this.prevBtn = document.getElementById(containerId.replace('-slider', '-prev'));
+                this.nextBtn = document.getElementById(containerId.replace('-slider', '-next'));
+                this.dotsContainer = document.getElementById(containerId.replace('-slider', '-dots'));
+                
+                this.currentSlide = 0;
+                this.slidesToShow = options.slidesToShow || this.getSlidesToShow();
+                this.totalSlides = this.slides.length;
+                this.maxSlide = Math.max(0, this.totalSlides - this.slidesToShow);
+                
+                this.init();
+            }
+            
+            getSlidesToShow() {
+                if (window.innerWidth >= 1024) return 3;
+                if (window.innerWidth >= 768) return 2;
+                return 1;
+            }
+            
+            init() {
+                this.createDots();
+                this.updateSlider();
+                this.bindEvents();
+                
+                // Handle resize
+                window.addEventListener('resize', () => {
+                    this.slidesToShow = this.getSlidesToShow();
+                    this.maxSlide = Math.max(0, this.totalSlides - this.slidesToShow);
+                    this.currentSlide = Math.min(this.currentSlide, this.maxSlide);
+                    this.updateSlider();
+                });
+            }
+            
+            createDots() {
+                this.dotsContainer.innerHTML = '';
+                const dotsCount = this.maxSlide + 1;
+                
+                for (let i = 0; i < dotsCount; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'slider-dot';
+                    dot.setAttribute('aria-label', `Перейти к слайду ${i + 1}`);
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    this.dotsContainer.appendChild(dot);
+                }
+            }
+            
+            bindEvents() {
+                this.prevBtn.addEventListener('click', () => this.prevSlide());
+                this.nextBtn.addEventListener('click', () => this.nextSlide());
+                
+                // Touch/swipe support
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+                
+                this.wrapper.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                });
+                
+                this.wrapper.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    currentX = e.touches[0].clientX;
+                });
+                
+                this.wrapper.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    
+                    const diff = startX - currentX;
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                    }
+                });
+            }
+            
+            updateSlider() {
+                const slideWidth = 100 / this.slidesToShow;
+                const translateX = -(this.currentSlide * slideWidth);
+                
+                this.wrapper.style.transform = `translateX(${translateX}%)`;
+                
+                // Update navigation buttons
+                this.prevBtn.disabled = this.currentSlide === 0;
+                this.nextBtn.disabled = this.currentSlide >= this.maxSlide;
+                
+                // Update dots
+                const dots = this.dotsContainer.querySelectorAll('.slider-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentSlide);
+                });
+            }
+            
+            goToSlide(index) {
+                this.currentSlide = Math.max(0, Math.min(index, this.maxSlide));
+                this.updateSlider();
+            }
+            
+            nextSlide() {
+                if (this.currentSlide < this.maxSlide) {
+                    this.currentSlide++;
+                    this.updateSlider();
+                }
+            }
+            
+            prevSlide() {
+                if (this.currentSlide > 0) {
+                    this.currentSlide--;
+                    this.updateSlider();
+                }
+            }
+        }
+
         // Mobile menu functionality
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
@@ -1383,57 +1670,20 @@
             input.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');
                 
-                if (value.startsWith('8')) {
-                    value = '7' + value.slice(1);
-                }
-                
                 if (value.startsWith('7')) {
-                    value = value.replace(/^7(\d{3})(\d{3})(\d{2})(\d{2})$/, '+7 ($1) $2-$3-$4');
+                    value = '+7 (' + value.slice(1, 4) + ') ' + value.slice(4, 7) + '-' + value.slice(7, 9) + '-' + value.slice(9, 11);
+                } else if (value.startsWith('8')) {
+                    value = '+7 (' + value.slice(1, 4) + ') ' + value.slice(4, 7) + '-' + value.slice(7, 9) + '-' + value.slice(9, 11);
                 }
                 
                 e.target.value = value;
             });
         });
 
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-fade-in-up');
-                }
-            });
-        }, observerOptions);
-
-        // Observe sections for animation
-        document.querySelectorAll('section').forEach(section => {
-            observer.observe(section);
-        });
-
-        // Header background on scroll
-        let lastScrollY = window.scrollY;
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.header');
-            const currentScrollY = window.scrollY;
-            
-            if (currentScrollY > 100) {
-                header.style.background = 'rgba(26, 26, 26, 0.95)';
-            } else {
-                header.style.background = 'rgba(26, 26, 26, 0.9)';
-            }
-            
-            lastScrollY = currentScrollY;
-        });
-
-        // Preload critical images
-        const criticalImages = ['door_render_main.png'];
-        criticalImages.forEach(src => {
-            const img = new Image();
-            img.src = src;
+        // Initialize sliders when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize works slider
+            new Slider('works-slider');
         });
     </script>
 </body>
