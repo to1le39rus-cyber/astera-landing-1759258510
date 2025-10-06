@@ -1,327 +1,295 @@
 // Main JavaScript functionality for Astera Landing Page
 
-// DOM Elements
-const modal = document.getElementById('modal');
-const mobileNav = document.getElementById('mobileNav');
-const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-const contactForm = document.getElementById('contactForm');
-
-// Initialize when DOM is loaded
+// DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
+    initializeNavigation();
+    initializeForms();
+    initializeModal();
+    initializeScrollEffects();
+    initializePhoneValidation();
 });
 
-// Initialize application
-function initializeApp() {
-    setupEventListeners();
-    setupFormValidation();
-    setupScrollEffects();
-    setupAccessibility();
-}
+// Navigation functionality
+function initializeNavigation() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
 
-// Event Listeners
-function setupEventListeners() {
-    // Close modal when clicking outside
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
+    // Toggle mobile menu
+    if (hamburger) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+        });
+    }
+
+    // Close mobile menu when clicking on links
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
     });
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-    
-    // Smooth scroll for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
+
+    // Smooth scrolling for navigation links
+    navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            scrollToSection(targetId);
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                const headerHeight = document.querySelector('.header').offsetHeight;
+                const targetPosition = targetSection.offsetTop - headerHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
         });
     });
-    
+
     // Header scroll effect
-    window.addEventListener('scroll', handleHeaderScroll);
-    
-    // Form submission
-    if (contactForm) {
-        contactForm.addEventListener('submit', submitForm);
-    }
-}
-
-// Modal Functions
-function openModal(type = 'default') {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Update modal title based on type
-    const modalTitle = document.querySelector('.modal__title');
-    switch(type) {
-        case 'builder':
-            modalTitle.textContent = 'Сотрудничество с застройщиками';
-            break;
-        case 'designer':
-            modalTitle.textContent = 'Партнерская программа для дизайнеров';
-            break;
-        case 'contractor':
-            modalTitle.textContent = 'Сотрудничество со строителями';
-            break;
-        default:
-            modalTitle.textContent = 'Рассчитать стоимость двери';
-    }
-    
-    // Focus management for accessibility
-    const firstInput = modal.querySelector('input, textarea, button');
-    if (firstInput) {
-        setTimeout(() => firstInput.focus(), 100);
-    }
-}
-
-function closeModal(event) {
-    if (event) {
-        event.preventDefault();
-    }
-    
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    // Clear form
-    if (contactForm) {
-        contactForm.reset();
-        clearFormErrors();
-    }
-}
-
-// Mobile Menu Functions
-function toggleMobileMenu() {
-    const isActive = mobileNav.classList.contains('active');
-    
-    if (isActive) {
-        closeMobileMenu();
-    } else {
-        openMobileMenu();
-    }
-}
-
-function openMobileMenu() {
-    mobileNav.classList.add('active');
-    mobileMenuToggle.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeMobileMenu() {
-    mobileNav.classList.remove('active');
-    mobileMenuToggle.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// Scroll Functions
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        const headerHeight = document.querySelector('.header').offsetHeight;
-        const targetPosition = section.offsetTop - headerHeight - 20;
-        
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-        });
-    }
-    
-    // Close mobile menu if open
-    closeMobileMenu();
-}
-
-function handleHeaderScroll() {
+    let lastScrollTop = 0;
     const header = document.querySelector('.header');
-    const scrolled = window.scrollY > 50;
     
-    if (scrolled) {
-        header.style.background = 'rgba(26, 26, 26, 0.98)';
-        header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
-    } else {
-        header.style.background = 'rgba(26, 26, 26, 0.95)';
-        header.style.boxShadow = 'none';
-    }
-}
-
-// Form Validation and Submission
-function setupFormValidation() {
-    const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', formatPhoneNumber);
-        phoneInput.addEventListener('blur', validatePhone);
-    }
-    
-    const nameInput = document.getElementById('name');
-    if (nameInput) {
-        nameInput.addEventListener('blur', validateName);
-    }
-    
-    const emailInput = document.getElementById('email');
-    if (emailInput) {
-        emailInput.addEventListener('blur', validateEmail);
-    }
-}
-
-function formatPhoneNumber(e) {
-    let value = e.target.value.replace(/\D/g, '');
-    
-    if (value.startsWith('7')) {
-        value = value.substring(1);
-    }
-    
-    if (value.length >= 10) {
-        value = value.substring(0, 10);
-        const formatted = `+7 (${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6, 8)}-${value.substring(8, 10)}`;
-        e.target.value = formatted;
-    }
-}
-
-function validatePhone(e) {
-    const phone = e.target.value;
-    const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
-    
-    if (phone && !phoneRegex.test(phone)) {
-        showFieldError(e.target, 'Введите корректный номер телефона');
-        return false;
-    } else {
-        clearFieldError(e.target);
-        return true;
-    }
-}
-
-function validateName(e) {
-    const name = e.target.value.trim();
-    
-    if (name.length < 2) {
-        showFieldError(e.target, 'Имя должно содержать минимум 2 символа');
-        return false;
-    } else {
-        clearFieldError(e.target);
-        return true;
-    }
-}
-
-function validateEmail(e) {
-    const email = e.target.value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (email && !emailRegex.test(email)) {
-        showFieldError(e.target, 'Введите корректный email адрес');
-        return false;
-    } else {
-        clearFieldError(e.target);
-        return true;
-    }
-}
-
-function showFieldError(field, message) {
-    clearFieldError(field);
-    
-    field.style.borderColor = '#dc3545';
-    
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'field-error';
-    errorDiv.textContent = message;
-    errorDiv.style.color = '#dc3545';
-    errorDiv.style.fontSize = '0.875rem';
-    errorDiv.style.marginTop = '0.25rem';
-    
-    field.parentNode.appendChild(errorDiv);
-}
-
-function clearFieldError(field) {
-    field.style.borderColor = '';
-    
-    const existingError = field.parentNode.querySelector('.field-error');
-    if (existingError) {
-        existingError.remove();
-    }
-}
-
-function clearFormErrors() {
-    document.querySelectorAll('.field-error').forEach(error => error.remove());
-    document.querySelectorAll('.form__input, .form__textarea').forEach(field => {
-        field.style.borderColor = '';
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+            header.style.transform = 'translateY(-100%)';
+        } else {
+            header.style.transform = 'translateY(0)';
+        }
+        
+        lastScrollTop = scrollTop;
     });
 }
 
-function submitForm(e) {
+// Modal functionality
+function initializeModal() {
+    const modal = document.getElementById('modal');
+    
+    // Close modal when clicking outside
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal && modal.style.display === 'block') {
+            closeModal();
+        }
+    });
+}
+
+// Open modal
+function openModal() {
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Focus on first input
+        const firstInput = modal.querySelector('input');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+    }
+}
+
+// Close modal
+function closeModal() {
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// Form handling
+function initializeForms() {
+    const contactForm = document.getElementById('contact-form');
+    const modalForm = document.getElementById('modal-form');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', handleFormSubmit);
+    }
+
+    if (modalForm) {
+        modalForm.addEventListener('submit', handleFormSubmit);
+    }
+}
+
+// Handle form submission
+function handleFormSubmit(e) {
     e.preventDefault();
     
-    // Validate all fields
-    const nameValid = validateName({ target: document.getElementById('name') });
-    const phoneValid = validatePhone({ target: document.getElementById('phone') });
-    const emailValid = validateEmail({ target: document.getElementById('email') });
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
     
-    if (!nameValid || !phoneValid || !emailValid) {
+    // Validate form
+    if (!validateForm(data)) {
         return;
     }
     
     // Show loading state
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Отправка...';
-    submitBtn.disabled = true;
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+    submitButton.textContent = 'Отправляем...';
+    submitButton.disabled = true;
     
     // Simulate form submission (replace with actual API call)
     setTimeout(() => {
-        // Show success message
-        showNotification('Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.', 'success');
+        showNotification('Заявка отправлена! Мы свяжемся с вами в ближайшее время.', 'success');
+        form.reset();
         
-        // Reset form and close modal
-        contactForm.reset();
-        closeModal();
+        // Close modal if it's modal form
+        if (form.id === 'modal-form') {
+            closeModal();
+        }
         
         // Reset button
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
     }, 2000);
 }
 
-// Notification System
+// Form validation
+function validateForm(data) {
+    const errors = [];
+    
+    // Name validation
+    if (!data.name || data.name.trim().length < 2) {
+        errors.push('Пожалуйста, введите корректное имя');
+    }
+    
+    // Phone validation
+    if (!data.phone || !isValidPhone(data.phone)) {
+        errors.push('Пожалуйста, введите корректный номер телефона');
+    }
+    
+    if (errors.length > 0) {
+        showNotification(errors.join('\n'), 'error');
+        return false;
+    }
+    
+    return true;
+}
+
+// Phone validation
+function isValidPhone(phone) {
+    const phoneRegex = /^[\+]?[7-8]?[\s\-\(\)]?[\d\s\-\(\)]{10,}$/;
+    return phoneRegex.test(phone.replace(/\s/g, ''));
+}
+
+// Phone input formatting
+function initializePhoneValidation() {
+    const phoneInputs = document.querySelectorAll('input[type="tel"]');
+    
+    phoneInputs.forEach(input => {
+        input.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 0) {
+                if (value[0] === '8') {
+                    value = '7' + value.slice(1);
+                }
+                
+                if (value.length > 1) {
+                    value = '+7 (' + value.slice(1, 4) + ') ' + 
+                           value.slice(4, 7) + '-' + 
+                           value.slice(7, 9) + '-' + 
+                           value.slice(9, 11);
+                }
+            }
+            
+            e.target.value = value;
+        });
+        
+        input.addEventListener('keydown', function(e) {
+            // Allow backspace, delete, tab, escape, enter
+            if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+                // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                (e.keyCode === 65 && e.ctrlKey === true) ||
+                (e.keyCode === 67 && e.ctrlKey === true) ||
+                (e.keyCode === 86 && e.ctrlKey === true) ||
+                (e.keyCode === 88 && e.ctrlKey === true)) {
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    });
+}
+
+// Notification system
 function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create notification element
     const notification = document.createElement('div');
-    notification.className = `notification notification--${type}`;
+    notification.className = `notification notification-${type}`;
     notification.innerHTML = `
-        <div class="notification__content">
-            <span class="notification__message">${message}</span>
-            <button class="notification__close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+        <div class="notification-content">
+            <span class="notification-message">${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
         </div>
     `;
     
     // Add styles
     notification.style.cssText = `
         position: fixed;
-        top: 20px;
+        top: 100px;
         right: 20px;
-        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'};
+        z-index: 10000;
+        background: ${type === 'success' ? 'linear-gradient(135deg, #28a745, #20c997)' : 'linear-gradient(135deg, #dc3545, #fd7e14)'};
         color: white;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        z-index: 3000;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
         max-width: 400px;
-        animation: slideInRight 0.3s ease;
+        word-wrap: break-word;
     `;
     
+    // Add to document
     document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
     
     // Auto remove after 5 seconds
     setTimeout(() => {
         if (notification.parentElement) {
-            notification.remove();
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 300);
         }
     }, 5000);
 }
 
-// Scroll Effects
-function setupScrollEffects() {
+// Scroll effects
+function initializeScrollEffects() {
+    // Intersection Observer for animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -330,79 +298,60 @@ function setupScrollEffects() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in-up');
+                entry.target.classList.add('animate-in');
             }
         });
     }, observerOptions);
     
     // Observe elements for animation
-    document.querySelectorAll('.advantage, .why-us__item, .cooperation__item').forEach(el => {
+    const animateElements = document.querySelectorAll('.advantage-card, .cooperation-card, .stat-item');
+    animateElements.forEach(el => {
         observer.observe(el);
     });
-}
-
-// Accessibility Features
-function setupAccessibility() {
-    // Keyboard navigation for modal
-    document.addEventListener('keydown', function(e) {
-        if (modal.classList.contains('active')) {
-            handleModalKeyNavigation(e);
-        }
-    });
     
-    // Skip to main content link
-    const skipLink = document.createElement('a');
-    skipLink.href = '#hero';
-    skipLink.textContent = 'Перейти к основному содержанию';
-    skipLink.className = 'skip-link';
-    skipLink.style.cssText = `
-        position: absolute;
-        top: -40px;
-        left: 6px;
-        background: var(--color-primary);
-        color: var(--color-bg-primary);
-        padding: 8px;
-        text-decoration: none;
-        border-radius: 4px;
-        z-index: 1000;
-        transition: top 0.3s;
+    // Add CSS for animations
+    const style = document.createElement('style');
+    style.textContent = `
+        .advantage-card,
+        .cooperation-card,
+        .stat-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .advantage-card.animate-in,
+        .cooperation-card.animate-in,
+        .stat-item.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        
+        .notification-close:hover {
+            opacity: 0.7;
+        }
     `;
-    
-    skipLink.addEventListener('focus', function() {
-        this.style.top = '6px';
-    });
-    
-    skipLink.addEventListener('blur', function() {
-        this.style.top = '-40px';
-    });
-    
-    document.body.insertBefore(skipLink, document.body.firstChild);
+    document.head.appendChild(style);
 }
 
-function handleModalKeyNavigation(e) {
-    const focusableElements = modal.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-    
-    if (e.key === 'Tab') {
-        if (e.shiftKey) {
-            if (document.activeElement === firstElement) {
-                lastElement.focus();
-                e.preventDefault();
-            }
-        } else {
-            if (document.activeElement === lastElement) {
-                firstElement.focus();
-                e.preventDefault();
-            }
-        }
-    }
-}
-
-// Utility Functions
+// Utility functions
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -429,35 +378,38 @@ function throttle(func, limit) {
 }
 
 // Performance optimization
-const debouncedHandleResize = debounce(() => {
-    // Handle resize events
-    if (window.innerWidth >= 768) {
-        closeMobileMenu();
-    }
-}, 250);
-
-window.addEventListener('resize', debouncedHandleResize);
-
-// Preload critical images
-function preloadImages() {
-    const criticalImages = [
-        'img/renders/hero-door.png',
-        'img/works/project-1.png'
-    ];
+window.addEventListener('load', function() {
+    // Lazy load images
+    const images = document.querySelectorAll('img[data-src]');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
     
-    criticalImages.forEach(src => {
-        const img = new Image();
-        img.src = src;
+    images.forEach(img => imageObserver.observe(img));
+});
+
+// Error handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript error:', e.error);
+    // You can add error reporting here
+});
+
+// Service Worker registration (for PWA capabilities)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                console.log('ServiceWorker registration successful');
+            })
+            .catch(function(err) {
+                console.log('ServiceWorker registration failed');
+            });
     });
 }
-
-// Initialize image preloading
-document.addEventListener('DOMContentLoaded', preloadImages);
-
-// Export functions for global access
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.toggleMobileMenu = toggleMobileMenu;
-window.closeMobileMenu = closeMobileMenu;
-window.scrollToSection = scrollToSection;
-window.submitForm = submitForm;
