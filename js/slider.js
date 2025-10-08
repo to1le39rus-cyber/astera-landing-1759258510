@@ -1,38 +1,68 @@
-// Slider functionality for Astera Landing Page
+// Advanced Slider Implementation for Astera Landing Page
 
 class AsteraSlider {
-    constructor(sliderId) {
-        this.slider = document.getElementById(sliderId);
-        this.slides = this.slider.querySelectorAll('.slide');
-        this.dots = document.querySelectorAll('.dot');
-        this.prevBtn = document.querySelector('.prev-btn');
-        this.nextBtn = document.querySelector('.next-btn');
+    constructor(container, options = {}) {
+        this.container = container;
+        this.slides = container.querySelectorAll('.slider-slide');
+        this.prevBtn = container.querySelector('.slider-prev');
+        this.nextBtn = container.querySelector('.slider-next');
+        this.indicators = container.querySelector('.slider-indicators');
         
+        // Options
+        this.options = {
+            autoplay: options.autoplay || true,
+            autoplayDelay: options.autoplayDelay || 5000,
+            loop: options.loop !== false,
+            transition: options.transition || 'slide',
+            transitionDuration: options.transitionDuration || 600,
+            pauseOnHover: options.pauseOnHover !== false,
+            swipe: options.swipe !== false,
+            ...options
+        };
+        
+        // State
         this.currentSlide = 0;
-        this.totalSlides = this.slides.length;
-        this.isAutoPlay = true;
-        this.autoPlayInterval = 5000;
-        this.autoPlayTimer = null;
+        this.isTransitioning = false;
+        this.autoplayTimer = null;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
         
         this.init();
     }
     
     init() {
-        this.setupEventListeners();
-        this.startAutoPlay();
+        if (this.slides.length === 0) return;
+        
+        this.createIndicators();
+        this.bindEvents();
         this.updateSlider();
         
-        // Touch/swipe support
-        this.setupTouchEvents();
+        if (this.options.autoplay) {
+            this.startAutoplay();
+        }
         
-        // Keyboard navigation
-        this.setupKeyboardNavigation();
-        
-        // Pause autoplay on hover
-        this.setupHoverEvents();
+        // Initialize first slide
+        this.slides[0].classList.add('active');
+        this.updateIndicators();
     }
     
-    setupEventListeners() {
+    createIndicators() {
+        if (!this.indicators) return;
+        
+        this.indicators.innerHTML = '';
+        
+        this.slides.forEach((_, index) => {
+            const indicator = document.createElement('button');
+            indicator.className = 'slider-indicator';
+            indicator.setAttribute('aria-label', `Слайд ${index + 1}`);
+            indicator.addEventListener('click', () => this.goToSlide(index));
+            this.indicators.appendChild(indicator);
+        });
+        
+        this.indicatorButtons = this.indicators.querySelectorAll('.slider-indicator');
+    }
+    
+    bindEvents() {
         // Navigation buttons
         if (this.prevBtn) {
             this.prevBtn.addEventListener('click', () => this.prevSlide());
@@ -42,362 +72,307 @@ class AsteraSlider {
             this.nextBtn.addEventListener('click', () => this.nextSlide());
         }
         
-        // Dots navigation
-        this.dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => this.goToSlide(index));
-        });
-        
-        // Visibility change (pause when tab is not active)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.stopAutoPlay();
-            } else if (this.isAutoPlay) {
-                this.startAutoPlay();
-            }
-        });
-    }
-    
-    setupTouchEvents() {
-        let startX = 0;
-        let endX = 0;
-        let startY = 0;
-        let endY = 0;
-        
-        this.slider.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            this.stopAutoPlay();
-        }, { passive: true });
-        
-        this.slider.addEventListener('touchmove', (e) => {
-            // Prevent vertical scrolling while swiping horizontally
-            const deltaX = Math.abs(e.touches[0].clientX - startX);
-            const deltaY = Math.abs(e.touches[0].clientY - startY);
-            
-            if (deltaX > deltaY) {
+        // Keyboard navigation
+        this.container.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
                 e.preventDefault();
+                this.prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                this.nextSlide();
             }
-        }, { passive: false });
+        });
         
-        this.slider.addEventListener('touchend', (e) => {
-            endX = e.changedTouches[0].clientX;
-            endY = e.changedTouches[0].clientY;
+        // Pause on hover
+        if (this.options.pauseOnHover) {
+            this.container.addEventListener('mouseenter', () => this.pauseAutoplay());
+            this.container.addEventListener('mouseleave', () => this.resumeAutoplay());
+        }
+        
+        // Touch/swipe support
+        if (this.options.swipe) {
+            this.container.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+            this.container.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
             
-            const deltaX = startX - endX;
-            const deltaY = Math.abs(startY - endY);
+            // Mouse drag support
+            let isDragging = false;
+            let startX = 0;
             
-            // Only trigger swipe if horizontal movement is greater than vertical
-            if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > deltaY) {
-                if (deltaX > 0) {
-                    this.nextSlide();
-                } else {
-                    this.prevSlide();
-                }
-            }
+            this.container.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                this.container.style.cursor = 'grabbing';
+                e.preventDefault();
+            });
             
-            if (this.isAutoPlay) {
-                this.startAutoPlay();
-            }
-        }, { passive: true });
-    }
-    
-    setupKeyboardNavigation() {
-        document.addEventListener('keydown', (e) => {
-            // Only handle keyboard events when slider is in viewport
-            if (this.isInViewport()) {
-                switch (e.key) {
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        this.prevSlide();
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
+            this.container.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+            });
+            
+            this.container.addEventListener('mouseup', (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                this.container.style.cursor = '';
+                
+                const endX = e.clientX;
+                const diff = startX - endX;
+                
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
                         this.nextSlide();
-                        break;
-                    case ' ': // Spacebar
-                        e.preventDefault();
-                        this.toggleAutoPlay();
-                        break;
+                    } else {
+                        this.prevSlide();
+                    }
                 }
-            }
-        });
-    }
-    
-    setupHoverEvents() {
-        const sliderContainer = this.slider.closest('.slider-container');
-        
-        if (sliderContainer) {
-            sliderContainer.addEventListener('mouseenter', () => {
-                this.stopAutoPlay();
             });
             
-            sliderContainer.addEventListener('mouseleave', () => {
-                if (this.isAutoPlay) {
-                    this.startAutoPlay();
-                }
+            this.container.addEventListener('mouseleave', () => {
+                isDragging = false;
+                this.container.style.cursor = '';
             });
         }
+        
+        // Intersection Observer for lazy loading
+        this.initLazyLoading();
     }
     
-    isInViewport() {
-        const rect = this.slider.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
+    handleTouchStart(e) {
+        this.touchStartX = e.touches[0].clientX;
     }
     
-    updateSlider() {
-        // Update slides
-        this.slides.forEach((slide, index) => {
-            slide.classList.toggle('active', index === this.currentSlide);
-        });
+    handleTouchEnd(e) {
+        this.touchEndX = e.changedTouches[0].clientX;
+        this.handleSwipe();
+    }
+    
+    handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = this.touchStartX - this.touchEndX;
         
-        // Update dots
-        this.dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === this.currentSlide);
-        });
-        
-        // Update slider transform
-        const translateX = -this.currentSlide * 100;
-        this.slider.style.transform = `translateX(${translateX}%)`;
-        
-        // Update ARIA attributes for accessibility
-        this.updateAriaAttributes();
-        
-        // Trigger custom event
-        this.slider.dispatchEvent(new CustomEvent('slideChange', {
-            detail: {
-                currentSlide: this.currentSlide,
-                totalSlides: this.totalSlides
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                this.nextSlide();
+            } else {
+                this.prevSlide();
             }
-        }));
+        }
     }
     
-    updateAriaAttributes() {
-        this.slides.forEach((slide, index) => {
-            slide.setAttribute('aria-hidden', index !== this.currentSlide);
-            slide.setAttribute('tabindex', index === this.currentSlide ? '0' : '-1');
+    initLazyLoading() {
+        const images = this.container.querySelectorAll('img[data-src]');
+        
+        if (images.length === 0) return;
+        
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy');
+                    imageObserver.unobserve(img);
+                }
+            });
         });
         
-        // Update button states
-        if (this.prevBtn) {
-            this.prevBtn.setAttribute('aria-label', `Предыдущий слайд (${this.currentSlide + 1} из ${this.totalSlides})`);
-        }
+        images.forEach(img => imageObserver.observe(img));
+    }
+    
+    goToSlide(index) {
+        if (this.isTransitioning || index === this.currentSlide) return;
         
-        if (this.nextBtn) {
-            this.nextBtn.setAttribute('aria-label', `Следующий слайд (${this.currentSlide + 1} из ${this.totalSlides})`);
+        const prevSlide = this.currentSlide;
+        this.currentSlide = index;
+        
+        this.updateSlider(prevSlide);
+        this.updateIndicators();
+        
+        // Reset autoplay
+        if (this.options.autoplay) {
+            this.resetAutoplay();
         }
     }
     
     nextSlide() {
-        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-        this.updateSlider();
-        this.resetAutoPlay();
+        let nextIndex = this.currentSlide + 1;
+        
+        if (nextIndex >= this.slides.length) {
+            nextIndex = this.options.loop ? 0 : this.slides.length - 1;
+        }
+        
+        this.goToSlide(nextIndex);
     }
     
     prevSlide() {
-        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
-        this.updateSlider();
-        this.resetAutoPlay();
-    }
-    
-    goToSlide(index) {
-        if (index >= 0 && index < this.totalSlides) {
-            this.currentSlide = index;
-            this.updateSlider();
-            this.resetAutoPlay();
-        }
-    }
-    
-    startAutoPlay() {
-        if (this.isAutoPlay && !this.autoPlayTimer) {
-            this.autoPlayTimer = setInterval(() => {
-                this.nextSlide();
-            }, this.autoPlayInterval);
-        }
-    }
-    
-    stopAutoPlay() {
-        if (this.autoPlayTimer) {
-            clearInterval(this.autoPlayTimer);
-            this.autoPlayTimer = null;
-        }
-    }
-    
-    resetAutoPlay() {
-        this.stopAutoPlay();
-        if (this.isAutoPlay) {
-            this.startAutoPlay();
-        }
-    }
-    
-    toggleAutoPlay() {
-        this.isAutoPlay = !this.isAutoPlay;
-        if (this.isAutoPlay) {
-            this.startAutoPlay();
-        } else {
-            this.stopAutoPlay();
-        }
-    }
-    
-    // Public API methods
-    destroy() {
-        this.stopAutoPlay();
-        // Remove event listeners if needed
-    }
-    
-    setAutoPlayInterval(interval) {
-        this.autoPlayInterval = interval;
-        this.resetAutoPlay();
-    }
-    
-    enableAutoPlay() {
-        this.isAutoPlay = true;
-        this.startAutoPlay();
-    }
-    
-    disableAutoPlay() {
-        this.isAutoPlay = false;
-        this.stopAutoPlay();
-    }
-}
-
-// Global slider functions for backward compatibility
-let asteraSlider;
-
-function nextSlide() {
-    if (asteraSlider) {
-        asteraSlider.nextSlide();
-    }
-}
-
-function prevSlide() {
-    if (asteraSlider) {
-        asteraSlider.prevSlide();
-    }
-}
-
-function currentSlide(index) {
-    if (asteraSlider) {
-        asteraSlider.goToSlide(index - 1); // Convert to 0-based index
-    }
-}
-
-// Initialize slider when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    const sliderElement = document.getElementById('works-slider');
-    if (sliderElement) {
-        asteraSlider = new AsteraSlider('works-slider');
+        let prevIndex = this.currentSlide - 1;
         
-        // Add custom event listeners
-        sliderElement.addEventListener('slideChange', function(e) {
-            console.log(`Slide changed to: ${e.detail.currentSlide + 1}/${e.detail.totalSlides}`);
-        });
+        if (prevIndex < 0) {
+            prevIndex = this.options.loop ? this.slides.length - 1 : 0;
+        }
+        
+        this.goToSlide(prevIndex);
     }
-});
-
-// Intersection Observer for performance optimization
-if ('IntersectionObserver' in window) {
-    const sliderObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Slider is visible, ensure autoplay is working
-                if (asteraSlider && asteraSlider.isAutoPlay) {
-                    asteraSlider.startAutoPlay();
-                }
+    
+    updateSlider(prevSlideIndex = null) {
+        this.isTransitioning = true;
+        
+        // Remove active class from all slides
+        this.slides.forEach(slide => slide.classList.remove('active', 'prev', 'next'));
+        
+        // Add classes based on position
+        this.slides[this.currentSlide].classList.add('active');
+        
+        if (prevSlideIndex !== null) {
+            this.slides[prevSlideIndex].classList.add('prev');
+        }
+        
+        // Add next class for preview
+        const nextIndex = (this.currentSlide + 1) % this.slides.length;
+        this.slides[nextIndex].classList.add('next');
+        
+        // Apply transition effect
+        this.applyTransition();
+        
+        // Reset transition flag
+        setTimeout(() => {
+            this.isTransitioning = false;
+        }, this.options.transitionDuration);
+        
+        // Trigger custom event
+        this.container.dispatchEvent(new CustomEvent('slideChange', {
+            detail: {
+                currentSlide: this.currentSlide,
+                previousSlide: prevSlideIndex,
+                totalSlides: this.slides.length
+            }
+        }));
+    }
+    
+    applyTransition() {
+        const slidesContainer = this.container.querySelector('.slider-slides');
+        
+        switch (this.options.transition) {
+            case 'fade':
+                this.applyFadeTransition();
+                break;
+            case 'slide':
+            default:
+                this.applySlideTransition(slidesContainer);
+                break;
+        }
+    }
+    
+    applySlideTransition(container) {
+        if (!container) return;
+        
+        const translateX = -this.currentSlide * 100;
+        container.style.transform = `translateX(${translateX}%)`;
+        container.style.transition = `transform ${this.options.transitionDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+    }
+    
+    applyFadeTransition() {
+        this.slides.forEach((slide, index) => {
+            if (index === this.currentSlide) {
+                slide.style.opacity = '1';
+                slide.style.zIndex = '2';
             } else {
-                // Slider is not visible, pause autoplay
-                if (asteraSlider) {
-                    asteraSlider.stopAutoPlay();
-                }
+                slide.style.opacity = '0';
+                slide.style.zIndex = '1';
             }
+            slide.style.transition = `opacity ${this.options.transitionDuration}ms ease`;
         });
-    }, {
-        threshold: 0.1
-    });
+    }
     
-    document.addEventListener('DOMContentLoaded', function() {
-        const sliderContainer = document.querySelector('.slider-container');
-        if (sliderContainer) {
-            sliderObserver.observe(sliderContainer);
+    updateIndicators() {
+        if (!this.indicatorButtons) return;
+        
+        this.indicatorButtons.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === this.currentSlide);
+        });
+    }
+    
+    startAutoplay() {
+        if (!this.options.autoplay) return;
+        
+        this.autoplayTimer = setInterval(() => {
+            this.nextSlide();
+        }, this.options.autoplayDelay);
+    }
+    
+    pauseAutoplay() {
+        if (this.autoplayTimer) {
+            clearInterval(this.autoplayTimer);
+            this.autoplayTimer = null;
         }
+    }
+    
+    resumeAutoplay() {
+        if (this.options.autoplay && !this.autoplayTimer) {
+            this.startAutoplay();
+        }
+    }
+    
+    resetAutoplay() {
+        this.pauseAutoplay();
+        this.startAutoplay();
+    }
+    
+    destroy() {
+        this.pauseAutoplay();
+        
+        // Remove event listeners
+        if (this.prevBtn) {
+            this.prevBtn.removeEventListener('click', () => this.prevSlide());
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.removeEventListener('click', () => this.nextSlide());
+        }
+        
+        // Reset styles
+        this.slides.forEach(slide => {
+            slide.classList.remove('active', 'prev', 'next');
+            slide.style.opacity = '';
+            slide.style.zIndex = '';
+            slide.style.transition = '';
+        });
+        
+        const slidesContainer = this.container.querySelector('.slider-slides');
+        if (slidesContainer) {
+            slidesContainer.style.transform = '';
+            slidesContainer.style.transition = '';
+        }
+    }
+}
+
+// Initialize slider when DOM is ready
+function initializeSlider() {
+    const sliderContainers = document.querySelectorAll('.astera-slider');
+    
+    sliderContainers.forEach(container => {
+        // Get options from data attributes
+        const options = {
+            autoplay: container.dataset.autoplay !== 'false',
+            autoplayDelay: parseInt(container.dataset.autoplayDelay) || 5000,
+            loop: container.dataset.loop !== 'false',
+            transition: container.dataset.transition || 'slide',
+            transitionDuration: parseInt(container.dataset.transitionDuration) || 600,
+            pauseOnHover: container.dataset.pauseOnHover !== 'false',
+            swipe: container.dataset.swipe !== 'false'
+        };
+        
+        // Initialize slider
+        const slider = new AsteraSlider(container, options);
+        
+        // Store reference for potential later use
+        container.asteraSlider = slider;
     });
 }
 
-// Preload next slide images for better performance
-function preloadSlideImages() {
-    if (asteraSlider) {
-        const nextSlideIndex = (asteraSlider.currentSlide + 1) % asteraSlider.totalSlides;
-        const nextSlide = asteraSlider.slides[nextSlideIndex];
-        const images = nextSlide.querySelectorAll('img[data-src]');
-        
-        images.forEach(img => {
-            if (img.dataset.src && !img.src) {
-                img.src = img.dataset.src;
-            }
-        });
-    }
+// Export for use in other scripts
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = AsteraSlider;
 }
 
-// Add CSS for smooth transitions and accessibility
-const sliderStyles = document.createElement('style');
-sliderStyles.textContent = `
-    /* Focus styles for accessibility */
-    .slider-btn:focus,
-    .dot:focus {
-        outline: 2px solid #ffd700;
-        outline-offset: 2px;
-    }
-    
-    /* Reduced motion support */
-    @media (prefers-reduced-motion: reduce) {
-        .slider {
-            transition: none !important;
-        }
-        
-        .slide {
-            transition: none !important;
-        }
-    }
-    
-    /* High contrast mode */
-    @media (prefers-contrast: high) {
-        .slider-btn {
-            border-width: 3px;
-        }
-        
-        .dot {
-            border: 2px solid currentColor;
-        }
-    }
-    
-    /* Loading state */
-    .slider-loading {
-        opacity: 0.5;
-        pointer-events: none;
-    }
-    
-    .slider-loading::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 40px;
-        height: 40px;
-        margin: -20px 0 0 -20px;
-        border: 3px solid rgba(212, 175, 55, 0.3);
-        border-top: 3px solid #ffd700;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-`;
-
-document.head.appendChild(sliderStyles);
+// Global access
+window.AsteraSlider = AsteraSlider;
